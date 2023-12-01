@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document Reader</title>
+</head>
+<body>
+  <h1>Document Reader</h1>
+  <form action="/upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="document" accept=".pdf, .docx" required>
+    <button type="submit">Upload and Extract Text</button>
+  </form>
+  <div id="output">
+    <!-- Display extracted text here -->
+  </div>
+  <script>
+    document.querySelector('form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const formData = new FormData(event.target);
+
+      try {
+        const response = await fetch('/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (response.ok) {
+          const text = await response.text();
+          document.getElementById('output').innerText = text;
+        } else {
+          console.error('Error uploading document:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error:', error.message);
+      }
+    });
+  </script>
+</body>
+</html>
